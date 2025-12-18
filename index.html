@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Portal de Nochebuena</title>
+  <style>
+    :root {
+      --bg1:#0b1020; --bg2:#120a1a;
+      --card:#121a33cc; --border:#ffffff1f;
+      --text:#eef2ff; --muted:#b8c0ff;
+      --danger:#ff5a7a; --ok:#66ffcc;
+      --shadow: 0 18px 60px rgba(0,0,0,.45);
+      --radius: 20px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin:0; min-height:100vh;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text);
+      background:
+        radial-gradient(900px 500px at 20% 10%, #2a1a5c 0%, transparent 60%),
+        radial-gradient(700px 500px at 80% 20%, #3a0f2b 0%, transparent 55%),
+        linear-gradient(160deg, var(--bg1), var(--bg2));
+      display:flex; align-items:center; justify-content:center;
+      padding:24px;
+    }
+    .wrap { width:min(920px, 100%); }
+    .topbar {
+      display:flex; justify-content:space-between; align-items:center;
+      gap:16px; margin-bottom:14px;
+    }
+    .badge {
+      display:inline-flex; align-items:center; gap:10px;
+      padding:10px 14px; border:1px solid var(--border);
+      background:#0b1330b0; border-radius:999px;
+      backdrop-filter: blur(8px);
+    }
+    .dot {
+      width:10px; height:10px; border-radius:999px; background:var(--muted);
+      box-shadow: 0 0 20px rgba(184,192,255,.5);
+    }
+    .card {
+      border:1px solid var(--border);
+      background:var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      backdrop-filter: blur(10px);
+    }
+    .hero {
+      padding:28px 28px 18px 28px;
+      display:flex; flex-direction:column; gap:10px;
+    }
+    h1 { margin:0; font-size: clamp(24px, 3vw, 34px); letter-spacing:.2px; }
+    p { margin:0; color:var(--muted); line-height:1.45; }
+    .inputs {
+      padding: 12px 28px 26px 28px;
+      display:flex; flex-wrap:wrap; gap:12px;
+      align-items:center;
+    }
+    .pin {
+      width: 58px; height: 64px;
+      border-radius: 16px;
+      border:1px solid var(--border);
+      background:#0b1330cc;
+      color:var(--text);
+      font-size:28px;
+      text-align:center;
+      outline:none;
+      transition: transform .08s ease, border-color .15s ease;
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
+    .pin:focus { border-color:#ffffff55; transform: translateY(-1px); }
+    .actions {
+      padding: 0 28px 28px 28px;
+      display:flex; gap:12px; flex-wrap:wrap; align-items:center;
+    }
+    button {
+      border:none;
+      padding:12px 16px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #7c5cff, #ff4fd8);
+      color:white; font-weight:650; letter-spacing:.2px;
+      cursor:pointer;
+      box-shadow: 0 14px 36px rgba(0,0,0,.35);
+      transition: transform .08s ease, filter .15s ease;
+    }
+    button:hover { filter: brightness(1.05); }
+    button:active { transform: translateY(1px); }
+    .ghost {
+      background: transparent;
+      border:1px solid var(--border);
+      box-shadow:none;
+      color:var(--text);
+    }
+    .msg {
+      min-height: 22px;
+      color: var(--muted);
+      padding: 0 28px 20px 28px;
+    }
+    .msg.error { color: var(--danger); }
+    .msg.ok { color: var(--ok); }
+    .reveal {
+      display:none;
+      border-top:1px solid var(--border);
+      padding: 22px 28px 28px 28px;
+      gap:16px;
+    }
+    .reveal.show { display:grid; }
+    .codeBox {
+      display:flex; align-items:center; justify-content:space-between;
+      gap:16px;
+      padding:16px 16px;
+      border-radius: 16px;
+      border:1px solid var(--border);
+      background:#0b1330cc;
+    }
+    .finalCode {
+      font-size: 28px; letter-spacing: 10px; font-weight: 800;
+    }
+    video {
+      width:100%;
+      border-radius: 16px;
+      border:1px solid var(--border);
+      background:#000;
+      box-shadow: 0 16px 46px rgba(0,0,0,.35);
+    }
+    .small { font-size: 13px; color: var(--muted); }
+    @media (max-width:520px){
+      .pin { width: 48px; height: 58px; font-size: 24px; }
+      .finalCode { letter-spacing: 7px; }
+      .topbar { flex-direction: column; align-items:flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="badge" aria-live="polite">
+        <span class="dot" id="dot"></span>
+        <span><strong>Intentos:</strong> <span id="tries">3</span></span>
+      </div>
+      <div class="badge">
+        <span class="dot" style="background:#ffd36a"></span>
+        <span><strong>Portal</strong> · Nochebuena</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="hero">
+        <h1>Introduce el código de 6 dígitos</h1>
+        <p>Seis señales, una sola puerta. Cuando el portal se abra, aparecerá el mensaje final.</p>
+        <p class="small">Tip: puedes pegar los 6 números de golpe.</p>
+      </div>
+
+      <div class="inputs" id="inputs">
+        <input class="pin" inputmode="numeric" maxlength="1" aria-label="Dígito 1" />
+        <input class="pin" inputmode="numeric" maxlength="1" aria-label="Dígito 2" />
+        <input class="pin" inputmode="numeric" maxlength="1" aria-label="Dígito 3" />
+        <input class="pin" inputmode="numeric" maxlength="1" aria-label="Dígito 4" />
+        <input class="pin" inputmode="numeric" maxlength="1" aria-label="Dígito 5" />
+        <input class="pin" inputmode="numeric" maxlength="1" aria-label="Dígito 6" />
+      </div>
+
+      <div class="actions">
+        <button id="checkBtn">Abrir portal</button>
+        <button class="ghost" id="clearBtn">Borrar</button>
+      </div>
+
+      <div class="msg" id="msg" aria-live="polite"></div>
+
+      <div class="reveal" id="reveal">
+        <div>
+          <h2 style="margin:0 0 8px 0; font-size: 22px;">Acceso concedido ✅</h2>
+          <p style="margin:0 0 14px 0; color: var(--muted);">
+            Mirad el vídeo. Al final aparece la clave… pero por si acaso, aquí está el código del candado.
+          </p>
+
+          <div class="codeBox">
+            <div>
+              <div class="small">Código del candado (4 dígitos)</div>
+              <div class="finalCode" id="finalCode">----</div>
+            </div>
+            <button class="ghost" id="copyBtn">Copiar</button>
+          </div>
+        </div>
+
+        <div>
+          <!-- Pon tu vídeo en el repo como "final.mp4" -->
+          <video id="video" controls preload="metadata">
+            <source src="final.mp4" type="video/mp4" />
+            Tu navegador no soporta vídeo HTML5.
+          </video>
+          <div class="small" style="margin-top:8px;">
+            Si no se reproduce, revisa que el archivo se llame exactamente <strong>final.mp4</strong> y esté en la raíz del repo.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =============================
+    // CONFIGURACIÓN (cambia esto)
+    // =============================
+    const SECRET_6 = "123456"; // <- pon aquí el código de 6 dígitos real
+    const FINAL_4  = "7924";   // <- pon aquí el código final del candado
+
+    const MAX_TRIES = 3;
+
+    // =============================
+    // Lógica de la UI
+    // =============================
+    const inputs = Array.from(document.querySelectorAll(".pin"));
+    const triesEl = document.getElementById("tries");
+    const msgEl = document.getElementById("msg");
+    const revealEl = document.getElementById("reveal");
+    const finalCodeEl = document.getElementById("finalCode");
+    const dotEl = document.getElementById("dot");
+    const checkBtn = document.getElementById("checkBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const copyBtn = document.getElementById("copyBtn");
+    const videoEl = document.getElementById("video");
+
+    let triesLeft = MAX_TRIES;
+    let locked = false;
+
+    function setMsg(text, kind="") {
+      msgEl.textContent = text;
+      msgEl.className = "msg" + (kind ? " " + kind : "");
+    }
+
+    function updateTries() {
+      triesEl.textContent = String(triesLeft);
+      // Color del puntito según intentos
+      if (triesLeft >= 2) dotEl.style.background = "#b8c0ff";
+      if (triesLeft === 1) dotEl.style.background = "#ffd36a";
+      if (triesLeft === 0) dotEl.style.background = "#ff5a7a";
+    }
+
+    function clearAll(focusFirst=true) {
+      inputs.forEach(i => i.value = "");
+      setMsg("");
+      if (focusFirst) inputs[0].focus();
+    }
+
+    function getCode() {
+      return inputs.map(i => i.value).join("");
+    }
+
+    function isComplete() {
+      return inputs.every(i => /^\d$/.test(i.value));
+    }
+
+    function lockPortal() {
+      locked = true;
+      inputs.forEach(i => i.disabled = true);
+      checkBtn.disabled = true;
+      setMsg("Portal bloqueado. Habéis agotado los intentos.", "error");
+    }
+
+    function success() {
+      revealEl.classList.add("show");
+      finalCodeEl.textContent = FINAL_4;
+      setMsg("¡Correcto! El portal se ha abierto.", "ok");
+      // Opcional: auto play (a veces el navegador lo bloquea)
+      try { videoEl.play(); } catch (e) {}
+      // Bloquea inputs para que no lo cambien
+      inputs.forEach(i => i.disabled = true);
+      checkBtn.disabled = true;
+      clearBtn.disabled = true;
+    }
+
+    function fail() {
+      triesLeft -= 1;
+      updateTries();
+      if (triesLeft <= 0) {
+        lockPortal();
+        return;
+      }
+      setMsg(`Código incorrecto. Quedan ${triesLeft} intento(s).`, "error");
+      // Pequeño “shake” visual sin librerías
+      const card = document.querySelector(".card");
+      card.animate(
+        [{ transform: "translateX(0)" }, { transform: "translateX(-6px)" }, { transform: "translateX(6px)" }, { transform: "translateX(0)" }],
+        { duration: 180, iterations: 1 }
+      );
+      clearAll(true);
+    }
+
+    function check() {
+      if (locked) return;
+      if (!isComplete()) {
+        setMsg("Completa los 6 dígitos.", "error");
+        return;
+      }
+      const code = getCode();
+      if (code === SECRET_6) success();
+      else fail();
+    }
+
+    // Autofoco / navegación / solo dígitos
+    inputs.forEach((input, idx) => {
+      input.addEventListener("keydown", (e) => {
+        if (locked) return;
+
+        if (e.key === "Backspace") {
+          if (input.value === "" && idx > 0) inputs[idx - 1].focus();
+          return;
+        }
+        if (e.key === "ArrowLeft" && idx > 0) inputs[idx - 1].focus();
+        if (e.key === "ArrowRight" && idx < inputs.length - 1) inputs[idx + 1].focus();
+      });
+
+      input.addEventListener("input", () => {
+        if (locked) return;
+        // Solo un dígito
+        input.value = (input.value || "").replace(/\D/g, "").slice(0, 1);
+        if (input.value && idx < inputs.length - 1) inputs[idx + 1].focus();
+      });
+
+      // Pegar los 6 dígitos en cualquier casilla
+      input.addEventListener("paste", (e) => {
+        if (locked) return;
+        const text = (e.clipboardData || window.clipboardData).getData("text");
+        const digits = (text || "").replace(/\D/g, "").slice(0, 6);
+        if (!digits) return;
+
+        e.preventDefault();
+        for (let i = 0; i < inputs.length; i++) {
+          inputs[i].value = digits[i] || "";
+        }
+        const next = inputs[Math.min(digits.length, inputs.length - 1)];
+        next.focus();
+      });
+    });
+
+    checkBtn.addEventListener("click", check);
+    clearBtn.addEventListener("click", () => clearAll(true));
+
+    copyBtn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(FINAL_4);
+        setMsg("Código copiado al portapapeles ✅", "ok");
+      } catch {
+        setMsg("No he podido copiar automáticamente. Apúntalo: " + FINAL_4, "error");
+      }
+    });
+
+    // Enter para comprobar
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") check();
+    });
+
+    // Init
+    updateTries();
+    inputs[0].focus();
+  </script>
+</body>
+</html>
