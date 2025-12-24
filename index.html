@@ -15,6 +15,7 @@
       --radius:20px;
     }
     *{ box-sizing:border-box; }
+
     body{
       margin:0; min-height:100vh;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
@@ -23,23 +24,29 @@
         radial-gradient(900px 500px at 20% 10%, #2a1a5c 0%, transparent 60%),
         radial-gradient(700px 500px at 80% 20%, #3a0f2b 0%, transparent 55%),
         linear-gradient(160deg, var(--bg1), var(--bg2));
-      display:flex; align-items:center; justify-content:center;
+      display:flex;
+      align-items:center;
+      justify-content:center;
       padding:24px;
       overflow:hidden;
     }
 
-    /* ====== DECORACIÓN: copos/estrellas (sin libs) ====== */
+    /* ===== NIEVE / ESTRELLAS ===== */
     .snow{
-      position:fixed; inset:0; pointer-events:none; overflow:hidden;
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      overflow:hidden;
+      z-index:6; /* visible también en el final */
       filter: drop-shadow(0 0 8px rgba(255,255,255,.18));
     }
     .flake{
-      position:absolute; top:-10vh;
+      position:absolute;
+      top:-10vh;
       opacity:.85;
       animation-name: fall, sway;
       animation-timing-function: linear, ease-in-out;
       animation-iteration-count: infinite, infinite;
-      will-change: transform;
     }
     @keyframes fall { to { transform: translateY(120vh); } }
     @keyframes sway {
@@ -48,12 +55,18 @@
     }
 
     .wrap{ width:min(920px,100%); position:relative; z-index:2; }
+
     .topbar{
-      display:flex; justify-content:space-between; align-items:center;
-      gap:16px; margin-bottom:14px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      margin-bottom:14px;
     }
     .badge{
-      display:inline-flex; align-items:center; gap:10px;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
       padding:10px 14px;
       border:1px solid var(--border);
       background:#0b1330b0;
@@ -61,7 +74,10 @@
       backdrop-filter: blur(8px);
     }
     .dot{
-      width:10px; height:10px; border-radius:999px; background:var(--muted);
+      width:10px;
+      height:10px;
+      border-radius:999px;
+      background:var(--muted);
       box-shadow:0 0 18px rgba(184,192,255,.45);
     }
 
@@ -75,62 +91,63 @@
     }
     .hero{ padding:26px 28px 14px 28px; }
     h1{ margin:0 0 8px 0; font-size: clamp(22px, 3vw, 32px); }
-    p{ margin:0; color:var(--muted); line-height:1.45; }
+    p{ margin:0; color:var(--muted); }
 
     .inputs{
       padding: 12px 28px 22px 28px;
-      display:flex; gap:12px; flex-wrap:wrap; justify-content:center;
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      justify-content:center;
     }
     .pin{
-      width:58px; height:64px;
+      width:58px;
+      height:64px;
       border-radius:16px;
       border:1px solid var(--border);
       background:#0b1330cc;
       color:var(--text);
       font-size:28px;
       text-align:center;
-      outline:none;
-      box-shadow: 0 10px 30px rgba(0,0,0,.25);
     }
-    .pin:focus{ border-color:#ffffff55; }
 
     .actions{
       padding: 0 28px 18px 28px;
-      display:flex; gap:12px; justify-content:center; flex-wrap:wrap;
+      display:flex;
+      gap:12px;
+      justify-content:center;
     }
     button{
       border:none;
       padding:12px 16px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #7c5cff, #ff4fd8);
-      color:white; font-weight:700;
+      border-radius:14px;
+      background:linear-gradient(135deg,#7c5cff,#ff4fd8);
+      color:white;
+      font-weight:700;
       cursor:pointer;
-      box-shadow: 0 14px 36px rgba(0,0,0,.35);
     }
-    button:disabled{ opacity:.45; cursor:not-allowed; }
     .ghost{
       background:transparent;
       border:1px solid var(--border);
-      box-shadow:none;
-      color:var(--text);
     }
 
     .msg{
-      min-height: 24px;
-      padding: 0 28px 22px 28px;
+      min-height:24px;
+      padding:0 28px 22px 28px;
       text-align:center;
-      letter-spacing:.2px;
     }
     .msg.error{ color:var(--danger); }
     .msg.warn{ color:var(--warn); }
     .msg.ok{ color:var(--ok); }
 
-    /* ====== Pantalla final limpia ====== */
+    /* ===== FINAL ===== */
     #finalScreen{
       display:none;
-      position:fixed; inset:0;
+      position:fixed;
+      inset:0;
       z-index:5;
-      align-items:center; justify-content:center;
+      align-items:center;
+      justify-content:center;
       background:
         radial-gradient(900px 500px at 20% 10%, #2a1a5c 0%, transparent 60%),
         radial-gradient(700px 500px at 80% 20%, #3a0f2b 0%, transparent 55%),
@@ -138,55 +155,46 @@
     }
     #finalCode{
       font-size: clamp(64px, 10vw, 110px);
-      font-weight: 950;
-      letter-spacing: 16px;
+      font-weight:950;
+      letter-spacing:16px;
       opacity:0;
-      transform: translateY(8px);
       animation: finalIn .9s ease forwards;
       text-shadow: 0 20px 60px rgba(0,0,0,.55);
     }
-    @keyframes finalIn{
-      to { opacity:1; transform: translateY(0); }
-    }
+    @keyframes finalIn{ to { opacity:1; } }
 
     video{ display:none; }
-
-    @media (max-width:520px){
-      .pin{ width:48px; height:58px; font-size:24px; }
-      #finalCode{ letter-spacing: 10px; }
-      .topbar{ flex-direction:column; align-items:flex-start; }
-    }
   </style>
 </head>
 
 <body>
-  <div class="snow" id="snow" aria-hidden="true"></div>
+
+  <div class="snow" id="snow"></div>
 
   <div class="wrap" id="portalWrap">
     <div class="topbar">
-      <div class="badge" aria-live="polite">
+      <div class="badge">
         <span class="dot" id="dot"></span>
         <span><strong>Intentos:</strong> <span id="tries">3</span></span>
       </div>
       <div class="badge">
-        <span class="dot" style="background:#66ffcc"></span>
-        <span><strong>Portal</strong> · Nochebuena</span>
+        <strong>Portal · Nochebuena</strong>
       </div>
     </div>
 
     <div class="card" id="card">
       <div class="hero">
         <h1>Introduce el código de 6 dígitos</h1>
-        <p>El portal solo se abrirá una vez. Si falláis… no insistáis demasiado.</p>
+        <p>El portal solo se abrirá una vez…</p>
       </div>
 
       <div class="inputs">
-        <input class="pin" maxlength="1" inputmode="numeric" aria-label="Dígito 1" />
-        <input class="pin" maxlength="1" inputmode="numeric" aria-label="Dígito 2" />
-        <input class="pin" maxlength="1" inputmode="numeric" aria-label="Dígito 3" />
-        <input class="pin" maxlength="1" inputmode="numeric" aria-label="Dígito 4" />
-        <input class="pin" maxlength="1" inputmode="numeric" aria-label="Dígito 5" />
-        <input class="pin" maxlength="1" inputmode="numeric" aria-label="Dígito 6" />
+        <input class="pin" maxlength="1" inputmode="numeric" />
+        <input class="pin" maxlength="1" inputmode="numeric" />
+        <input class="pin" maxlength="1" inputmode="numeric" />
+        <input class="pin" maxlength="1" inputmode="numeric" />
+        <input class="pin" maxlength="1" inputmode="numeric" />
+        <input class="pin" maxlength="1" inputmode="numeric" />
       </div>
 
       <div class="actions">
@@ -194,33 +202,27 @@
         <button class="ghost" id="clearBtn">Borrar</button>
       </div>
 
-      <div class="msg" id="msg" aria-live="polite"></div>
+      <div class="msg" id="msg"></div>
     </div>
   </div>
 
-  <!-- Pantalla final limpia -->
   <div id="finalScreen">
     <div id="finalCode">591</div>
   </div>
 
-  <!-- Video oculto -->
-  <video id="video" preload="auto">
-    <source src="outro.mp4" type="video/mp4" />
+  <video id="video">
+    <source src="outro.mp4" type="video/mp4">
   </video>
 
   <script>
-    // ===== CONFIG =====
     const SECRET_6 = "220701";
     const FINAL_3  = "591";
     const MAX_TRIES = 3;
 
-    // ===== UI =====
     const inputs = [...document.querySelectorAll(".pin")];
     const msg = document.getElementById("msg");
     const triesEl = document.getElementById("tries");
     const dot = document.getElementById("dot");
-    const checkBtn = document.getElementById("checkBtn");
-    const clearBtn = document.getElementById("clearBtn");
     const portalWrap = document.getElementById("portalWrap");
     const finalScreen = document.getElementById("finalScreen");
     const finalCode = document.getElementById("finalCode");
@@ -229,177 +231,91 @@
     let tries = MAX_TRIES;
     let locked = false;
 
-    function setMsg(text, kind="") {
-      msg.textContent = text;
-      msg.className = "msg" + (kind ? " " + kind : "");
+    function updateTries(){
+      triesEl.textContent = tries;
+      dot.style.background = tries > 1 ? "#b8c0ff" : tries === 1 ? "#ffd36a" : "#ff5a7a";
     }
 
-    function updateTries() {
-      triesEl.textContent = String(tries);
-      if (tries >= 2) dot.style.background = "#b8c0ff";
-      if (tries === 1) dot.style.background = "#ffd36a";
-      if (tries === 0) dot.style.background = "#ff5a7a";
-    }
+    function getCode(){ return inputs.map(i => i.value).join(""); }
 
-    function clearAll(focusFirst=true) {
+    function clearAll(){
       inputs.forEach(i => i.value = "");
-      if (focusFirst) inputs[0].focus();
+      inputs[0].focus();
     }
 
-    function getCode() {
-      return inputs.map(i => i.value).join("");
-    }
-
-    function isComplete() {
-      return inputs.every(i => /^\d$/.test(i.value));
-    }
-
-    function lockPortal() {
-      locked = true;
-      inputs.forEach(i => i.disabled = true);
-      checkBtn.disabled = true;
-      clearBtn.disabled = true;
-      setMsg("PORTAL BLOQUEADO. No hay más oportunidades.", "error");
-    }
-
-    async function playFullscreenVideo() {
+    async function playVideo(){
       video.style.display = "block";
       video.currentTime = 0;
-
-      try {
-        if (video.requestFullscreen) await video.requestFullscreen();
-        else if (video.webkitRequestFullscreen) video.webkitRequestFullscreen();
-      } catch (e) {}
-
-      try { await video.play(); } catch (e) {}
+      try{
+        if(video.requestFullscreen) await video.requestFullscreen();
+      }catch(e){}
+      await video.play();
 
       video.onended = () => {
-        // salir de fullscreen si procede
-        try {
-          if (document.fullscreenElement) document.exitFullscreen();
-        } catch(e){}
-
-        video.pause();
+        if(document.fullscreenElement) document.exitFullscreen();
         video.style.display = "none";
-
-        // LIMPIAR TODO y dejar solo el código
         portalWrap.style.display = "none";
         finalCode.textContent = FINAL_3;
         finalScreen.style.display = "flex";
       };
     }
 
-    function fail() {
-      tries -= 1;
+    function fail(){
+      tries--;
       updateTries();
-
-      if (tries <= 0) {
-        lockPortal();
+      if(tries <= 0){
+        msg.textContent = "PORTAL BLOQUEADO";
+        msg.className = "msg error";
+        inputs.forEach(i => i.disabled = true);
+        locked = true;
         return;
       }
-
-      if (tries === 1) {
-        setMsg("Último intento… no volváis a fallar.", "warn");
-      } else {
-        setMsg(`Código incorrecto. Quedan ${tries} intentos.`, "error");
-      }
-
-      // mini sacudida
-      const card = document.getElementById("card");
-      card.animate(
-        [{ transform: "translateX(0)" }, { transform: "translateX(-7px)" }, { transform: "translateX(7px)" }, { transform: "translateX(0)" }],
-        { duration: 180, iterations: 1 }
-      );
-
-      clearAll(true);
+      msg.textContent = tries === 1 ? "Último intento…" : "Código incorrecto";
+      msg.className = tries === 1 ? "msg warn" : "msg error";
+      clearAll();
     }
 
-    async function success() {
-      setMsg("Acceso concedido.", "ok");
-      // Bloquea inputs para que no toquen nada mientras se reproduce el vídeo
-      inputs.forEach(i => i.disabled = true);
-      checkBtn.disabled = true;
-      clearBtn.disabled = true;
-
-      await playFullscreenVideo();
-    }
-
-    function check() {
-      if (locked) return;
-
-      if (!isComplete()) {
-        setMsg("Completa los 6 dígitos.", "error");
+    document.getElementById("checkBtn").onclick = async () => {
+      if(locked) return;
+      if(getCode().length < 6){
+        msg.textContent = "Completa los 6 dígitos";
+        msg.className = "msg error";
         return;
       }
+      if(getCode() === SECRET_6){
+        msg.textContent = "Acceso concedido";
+        msg.className = "msg ok";
+        await playVideo();
+      }else{
+        fail();
+      }
+    };
 
-      const code = getCode();
-      if (code === SECRET_6) success();
-      else fail();
-    }
+    document.getElementById("clearBtn").onclick = clearAll;
 
-    // ===== Inputs UX =====
-    inputs.forEach((input, idx) => {
-      input.addEventListener("keydown", (e) => {
-        if (locked) return;
-
-        if (e.key === "Backspace") {
-          if (input.value === "" && idx > 0) inputs[idx - 1].focus();
-          return;
-        }
-        if (e.key === "ArrowLeft" && idx > 0) inputs[idx - 1].focus();
-        if (e.key === "ArrowRight" && idx < inputs.length - 1) inputs[idx + 1].focus();
-      });
-
-      input.addEventListener("input", () => {
-        if (locked) return;
-        input.value = (input.value || "").replace(/\D/g, "").slice(0, 1);
-        if (input.value && idx < inputs.length - 1) inputs[idx + 1].focus();
-      });
-
-      input.addEventListener("paste", (e) => {
-        if (locked) return;
-        const text = (e.clipboardData || window.clipboardData).getData("text");
-        const digits = (text || "").replace(/\D/g, "").slice(0, 6);
-        if (!digits) return;
-
-        e.preventDefault();
-        for (let i = 0; i < inputs.length; i++) inputs[i].value = digits[i] || "";
-        inputs[Math.min(digits.length, inputs.length - 1)].focus();
-      });
+    inputs.forEach((input,i)=>{
+      input.oninput = () => {
+        input.value = input.value.replace(/\D/g,"");
+        if(input.value && i < inputs.length-1) inputs[i+1].focus();
+      };
     });
 
-    // ===== Buttons / Enter =====
-    checkBtn.addEventListener("click", check);
-    clearBtn.addEventListener("click", () => { setMsg(""); clearAll(true); });
-    document.addEventListener("keydown", (e) => { if (e.key === "Enter") check(); });
-
-    // ===== Snow generator =====
-    (function makeSnow(){
-      const container = document.getElementById("snow");
-      const symbols = ["❄", "✦", "✧", "✴", "❅"];
-      const count = 26;
-
-      for (let i=0; i<count; i++){
-        const s = document.createElement("div");
-        s.className = "flake";
-        s.textContent = symbols[Math.floor(Math.random()*symbols.length)];
-
-        const left = Math.random()*100;          // vw
-        const size = 12 + Math.random()*18;      // px
-        const dur  = 8  + Math.random()*10;      // s
-        const delay= Math.random()*-dur;         // s (empieza ya en distintos puntos)
-        const sway = 2  + Math.random()*3;       // s
-
-        s.style.left = left + "vw";
-        s.style.fontSize = size + "px";
-        s.style.animationDuration = `${dur}s, ${sway}s`;
-        s.style.animationDelay = `${delay}s, ${Math.random()*-sway}s`;
-
-        container.appendChild(s);
+    // generar nieve
+    (function(){
+      const snow = document.getElementById("snow");
+      const symbols = ["❄","✦","✧","❅","✴"];
+      for(let i=0;i<26;i++){
+        const f = document.createElement("div");
+        f.className = "flake";
+        f.textContent = symbols[Math.floor(Math.random()*symbols.length)];
+        f.style.left = Math.random()*100 + "vw";
+        f.style.fontSize = 12 + Math.random()*18 + "px";
+        f.style.animationDuration = (8 + Math.random()*10) + "s";
+        f.style.animationDelay = (-Math.random()*10) + "s";
+        snow.appendChild(f);
       }
     })();
 
-    // Init
     updateTries();
     inputs[0].focus();
   </script>
