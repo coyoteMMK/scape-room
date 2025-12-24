@@ -35,11 +35,9 @@
       display:inline-flex; align-items:center; gap:10px;
       padding:10px 14px; border:1px solid var(--border);
       background:#0b1330b0; border-radius:999px;
-      backdrop-filter: blur(8px);
     }
     .dot {
       width:10px; height:10px; border-radius:999px; background:var(--muted);
-      box-shadow: 0 0 20px rgba(184,192,255,.5);
     }
     .card {
       border:1px solid var(--border);
@@ -47,14 +45,11 @@
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       overflow:hidden;
-      backdrop-filter: blur(10px);
     }
     .hero {
       padding:28px 28px 18px 28px;
-      display:flex; flex-direction:column; gap:10px;
     }
-    h1 { margin:0; font-size: clamp(24px, 3vw, 34px); }
-    p { margin:0; color:var(--muted); line-height:1.45; }
+    h1 { margin:0; font-size: 28px; }
 
     .inputs {
       padding: 12px 28px 26px 28px;
@@ -68,7 +63,6 @@
       color:var(--text);
       font-size:28px;
       text-align:center;
-      outline:none;
     }
 
     .actions {
@@ -99,33 +93,20 @@
     .reveal {
       display:none;
       border-top:1px solid var(--border);
-      padding: 22px 28px 28px 28px;
-      gap:16px;
+      padding: 28px;
+      text-align:center;
     }
-    .reveal.show { display:grid; grid-template-columns: 1fr 1fr; gap:20px; }
+    .reveal.show { display:block; }
 
-    .codeBox {
-      padding:16px;
-      border-radius: 16px;
-      border:1px solid var(--border);
-      background:#0b1330cc;
-    }
     .finalCode {
-      font-size: 32px;
-      letter-spacing: 6px;
-      font-weight: 800;
-      margin-top:6px;
+      font-size: 48px;
+      letter-spacing: 8px;
+      font-weight: 900;
+      margin-top:12px;
     }
 
     video {
-      width:100%;
-      border-radius: 16px;
-      border:1px solid var(--border);
-      background:#000;
-    }
-
-    @media (max-width:600px){
-      .reveal.show { grid-template-columns: 1fr; }
+      display:none;
     }
   </style>
 </head>
@@ -138,7 +119,6 @@
       <span><strong>Intentos:</strong> <span id="tries">3</span></span>
     </div>
     <div class="badge">
-      <span class="dot" style="background:#ffd36a"></span>
       <strong>Portal · Nochebuena</strong>
     </div>
   </div>
@@ -146,7 +126,6 @@
   <div class="card">
     <div class="hero">
       <h1>Introduce el código de 6 dígitos</h1>
-      <p>Seis señales, una sola puerta.</p>
     </div>
 
     <div class="inputs">
@@ -166,25 +145,17 @@
     <div class="msg" id="msg"></div>
 
     <div class="reveal" id="reveal">
-      <div>
-        <h2>Acceso concedido ✅</h2>
-        <p>Mirad el vídeo. Al final aparece la pista final.</p>
-        <div class="codeBox">
-          <div><strong>Código del candado</strong></div>
-          <div class="finalCode" id="finalCode">---</div>
-        </div>
-      </div>
-      <div>
-        <video controls>
-          <source src="outro.mp4" type="video/mp4">
-        </video>
-      </div>
+      <h2>Acceso concedido ✅</h2>
+      <div class="finalCode" id="finalCode">---</div>
     </div>
   </div>
 </div>
 
+<video id="video">
+  <source src="outro.mp4" type="video/mp4">
+</video>
+
 <script>
-  // CONFIGURACIÓN
   const SECRET_6 = "220701";
   const FINAL_3 = "591";
   let tries = 3;
@@ -195,6 +166,7 @@
   const finalCode = document.getElementById("finalCode");
   const triesEl = document.getElementById("tries");
   const dot = document.getElementById("dot");
+  const video = document.getElementById("video");
 
   function updateTries(){
     triesEl.textContent = tries;
@@ -210,17 +182,38 @@
     inputs[0].focus();
   }
 
-  document.getElementById("checkBtn").onclick = () => {
+  async function playFullscreenVideo() {
+    video.style.display = "block";
+    video.currentTime = 0;
+
+    try {
+      if (video.requestFullscreen) await video.requestFullscreen();
+      else if (video.webkitRequestFullscreen) video.webkitRequestFullscreen();
+    } catch(e){}
+
+    video.play();
+
+    video.onended = () => {
+      if (document.fullscreenElement) document.exitFullscreen();
+      video.pause();
+      video.style.display = "none";
+    };
+  }
+
+  document.getElementById("checkBtn").onclick = async () => {
     if (getCode().length < 6) {
       msg.textContent = "Completa los 6 dígitos";
       msg.className = "msg error";
       return;
     }
+
     if (getCode() === SECRET_6) {
       msg.textContent = "¡Correcto!";
       msg.className = "msg ok";
       finalCode.textContent = FINAL_3;
       reveal.classList.add("show");
+
+      await playFullscreenVideo();
     } else {
       tries--;
       updateTries();
@@ -249,4 +242,3 @@
 
 </body>
 </html>
-
