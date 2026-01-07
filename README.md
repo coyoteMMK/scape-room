@@ -1,2 +1,2 @@
 # scape-room
-Scape room navideño
+Pueba final de Scape room navideño familiar.
